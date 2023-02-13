@@ -2549,9 +2549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"builder-shopify-hydrogen@workspace:.":
+"builder-shopify-hydrogen-practices@workspace:.":
   version: 0.0.0-use.local
-  resolution: "builder-shopify-hydrogen@workspace:."
+  resolution: "builder-shopify-hydrogen-practices@workspace:."
   dependencies:
     "@builder.io/react": 2.0.10
     "@builder.io/widgets": ^1.2.22
