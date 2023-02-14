@@ -1,67 +1,50 @@
-import {
-  useLocalization,
-  useShopQuery,
-  Seo,
-  useServerAnalytics,
-  ShopifyAnalyticsConstants,
-  gql,
-  type HydrogenRouteProps,
-} from '@shopify/hydrogen';
 import {Suspense} from 'react';
 
 import {PageHeader} from '~/components';
 import {NotFound, Layout} from '~/components/index.server';
+import {BuilderComponent} from '~/components/BuilderComponent.client';
 
-export default function Page({params}: HydrogenRouteProps) {
-  const {
-    language: {isoCode: languageCode},
-  } = useLocalization();
+import {useQuery, useServerAnalytics, ShopifyAnalyticsConstants} from '@shopify/hydrogen';
+import {builder} from '@builder.io/react';
 
-  const {handle} = params;
-  const {
-    data: {page},
-  } = useShopQuery({
-    query: PAGE_QUERY,
-    variables: {languageCode, handle},
+builder.init('5392aabdddfe455c892d9897f30391a0');
+
+const MODEL_NAME = 'page';
+
+export default function Page(props: any) {
+  const content = useQuery([MODEL_NAME, props.pathname], async () => {
+    return await builder
+      .get(MODEL_NAME, {
+        userAttributes: {
+          urlPath: props.pathname,
+        },
+      })
+      .promise();
   });
 
-  if (!page) {
-    return <NotFound />;
-  }
+  const params = new URLSearchParams(props.search);
+  const isPreviewing = params.has('builder.preview');
+  console.log(content);
 
   useServerAnalytics({
     shopify: {
       pageType: ShopifyAnalyticsConstants.pageType.page,
-      resourceId: page.id,
+      resourceId: content.id,
     },
   });
 
   return (
-    <Layout>
-      <Suspense>
-        <Seo type="page" data={page} />
-      </Suspense>
-      <PageHeader heading={page.title}>
-        <div
-          dangerouslySetInnerHTML={{__html: page.body}}
-          className="prose dark:prose-invert"
-        />
-      </PageHeader>
-    </Layout>
+    <div>
+      {!content.data && !isPreviewing ? (
+        <NotFound></NotFound>
+      ) : (
+        <Layout>
+          <Suspense></Suspense>
+          <PageHeader heading={content?.data?.data?.title}>
+            <BuilderComponent model={MODEL_NAME} content={content?.data} />
+          </PageHeader>
+        </Layout>
+      )}
+    </div>
   );
 }
-
-const PAGE_QUERY = gql`
-  query PageDetails($languageCode: LanguageCode, $handle: String!)
-  @inContext(language: $languageCode) {
-    page(handle: $handle) {
-      id
-      title
-      body
-      seo {
-        description
-        title
-      }
-    }
-  }
-`;

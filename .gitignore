@@ -5,3 +5,5 @@ dist
 dist-ssr
 *.local
 .yarn
+.yarnrc
+.yarnrc.yml
