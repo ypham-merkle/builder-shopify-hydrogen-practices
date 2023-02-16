@@ -8,3 +8,4 @@ export * from './sections/index';
 export {CountrySelector} from './CountrySelector.client';
 export {CustomFont} from './CustomFont.client';
 export {HeaderFallback} from './HeaderFallback';
+export {AnnouncementBar} from './global/AnnouncementBar.client';

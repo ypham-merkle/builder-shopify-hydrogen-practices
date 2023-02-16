@@ -2,7 +2,7 @@ import {Suspense} from 'react';
 import {useLocalization, useShopQuery, CacheLong, gql} from '@shopify/hydrogen';
 import type {Menu, Shop} from '@shopify/hydrogen/storefront-api-types';
 
-import {Header} from '~/components';
+import {AnnouncementBar, Header} from '~/components';
 import {Footer} from '~/components/index.server';
 import {parseMenu} from '~/lib/utils';
 
@@ -24,6 +24,7 @@ export function Layout({children}: {children: React.ReactNode}) {
           </a>
         </div>
         <Suspense fallback={<Header title={SHOP_NAME_FALLBACK} />}>
+          <AnnouncementBar />
           <HeaderWithMenu />
         </Suspense>
         <main role="main" id="mainContent" className="flex-grow">

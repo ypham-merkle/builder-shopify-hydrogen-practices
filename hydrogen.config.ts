@@ -5,7 +5,7 @@ export default defineConfig({
     defaultCountryCode: 'US',
     defaultLanguageCode: 'EN',
     storeDomain: 'training-merkle.myshopify.com',
-    storefrontToken: '17165108b075259dba78a00585a2e7e3',
+    storefrontToken: '2fe02ffffce8f454379d85a0f4e992db',
     storefrontApiVersion: '2022-07',
   },
   session: CookieSessionStorage('__session', {
