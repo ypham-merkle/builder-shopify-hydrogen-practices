@@ -2,7 +2,7 @@ import { BuilderComponent, builder } from '@builder.io/react'
 import {useEffect, useState} from 'react';
 import Cookies from 'universal-cookie';
 
-builder.init('5392aabdddfe455c892d9897f30391a0')
+builder.init('679c25f761c647f2a8e6bf979c2a6820')
   
 export const AnnouncementBar = () => {
   const [builderContentJson, setBuilderContentJson] = useState(undefined)
@@ -10,8 +10,7 @@ export const AnnouncementBar = () => {
   const cookies = new Cookies();
 
   useEffect(() => { 
-    builder.get('announcement-bar-y',
-    { entry: '2ac76806face405cb4589efb1d61997e' })
+    builder.get('announcement-bar', { url: location.pathname })
       .promise()
       .then(setBuilderContentJson)
   }, [])
@@ -22,7 +21,7 @@ export const AnnouncementBar = () => {
   }
 
   return <BuilderComponent 
-    model="announcement-bar-y" 
+    model="announcement-bar" 
     context={{
     closeBar: (event) => closeBar(event),
     hide: cookies.get('hideBar')=="true"
