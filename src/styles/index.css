@@ -172,3 +172,28 @@ shop-pay-button {
     }
   }
 }
+
+/* Style the tab */
+.tab-best-seller {
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Style the buttons inside the tab */
+.tab-best-seller button {
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 20px;
+  margin: 0 10px;
+  padding: 10px 20px;
+}
+
+/* Change background color of buttons on hover */
+.tab-best-seller button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab-best-seller button.active {
+  background-color: #ccc;
+}
