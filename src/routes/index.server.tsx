@@ -11,74 +11,56 @@ import {
 
 import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
 import {getHeroPlaceholder} from '~/lib/placeholders';
-import {FeaturedCollections, Hero} from '~/components';
-import {Layout, ProductSwimlane} from '~/components/index.server';
+import {FeaturedCollections, Hero, PageHeader} from '~/components';
+import {NotFound, Layout, ProductSwimlane} from '~/components/index.server';
 import {
   CollectionConnection,
   ProductConnection,
 } from '@shopify/hydrogen/storefront-api-types';
 
-export default function Homepage() {
+import {BuilderComponent} from '~/components/BuilderComponent.client';
+import {useQuery} from '@shopify/hydrogen';
+import {builder} from '@builder.io/react';
+
+builder.init('679c25f761c647f2a8e6bf979c2a6820');
+
+const MODEL_NAME = 'page';
+
+export default function Homepage(props: any) {
+  const content = useQuery([MODEL_NAME, props.pathname], async () => {
+    return await builder
+      .get(MODEL_NAME, {
+        userAttributes: {
+          urlPath: props.pathname,
+        },
+      })
+      .promise();
+  });
+
+  const params = new URLSearchParams(props.search);
+  const isPreviewing = params.has('builder.preview');
+  console.log(content);
+
   useServerAnalytics({
     shopify: {
       pageType: ShopifyAnalyticsConstants.pageType.home,
     },
   });
-
-  return (
-    <Layout>
-      <Suspense>
-        <SeoForHomepage />
-      </Suspense>
-      <Suspense>
-        <HomepageContent />
-      </Suspense>
-    </Layout>
-  );
-}
-
-function HomepageContent() {
-  const {
-    language: {isoCode: languageCode},
-    country: {isoCode: countryCode},
-  } = useLocalization();
-
-  const {data} = useShopQuery<{
-    heroBanners: CollectionConnection;
-    featuredCollections: CollectionConnection;
-    featuredProducts: ProductConnection;
-  }>({
-    query: HOMEPAGE_CONTENT_QUERY,
-    variables: {
-      language: languageCode,
-      country: countryCode,
-    },
-    preload: true,
-  });
-
-  const {heroBanners, featuredCollections, featuredProducts} = data;
-
-  // fill in the hero banners with placeholders if they're missing
-  const [primaryHero, secondaryHero, tertiaryHero] = getHeroPlaceholder(
-    heroBanners.nodes,
-  );
-
+  
   return (
     <>
-      {primaryHero && (
-        <Hero {...primaryHero} height="full" top loading="eager" />
+      {!content.data && !isPreviewing ? (
+        <NotFound></NotFound>
+      ) : (
+        <Layout>
+          <Suspense>
+            <SeoForHomepage />
+          </Suspense>
+          <Suspense>
+            <BuilderComponent model={MODEL_NAME} content={content?.data} />
+          </Suspense>
+        </Layout>
       )}
-      <ProductSwimlane
-        data={featuredProducts.nodes}
-        title="Featured Products"
-        divider="bottom"
-      />
-      {secondaryHero && <Hero {...secondaryHero} />}
-      <FeaturedCollections
-        data={featuredCollections.nodes}
-        title="Collections"
-      />
-      {tertiaryHero && <Hero {...tertiaryHero} />}
     </>
   );
 }
@@ -105,67 +87,6 @@ function SeoForHomepage() {
     />
   );
 }
-
-const HOMEPAGE_CONTENT_QUERY = gql`
-  ${MEDIA_FRAGMENT}
-  ${PRODUCT_CARD_FRAGMENT}
-  query homepage($country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    heroBanners: collections(
-      first: 3
-      query: "collection_type:custom"
-      sortKey: UPDATED_AT
-    ) {
-      nodes {
-        id
-        handle
-        title
-        descriptionHtml
-        heading: metafield(namespace: "hero", key: "title") {
-          value
-        }
-        byline: metafield(namespace: "hero", key: "byline") {
-          value
-        }
-        cta: metafield(namespace: "hero", key: "cta") {
-          value
-        }
-        spread: metafield(namespace: "hero", key: "spread") {
-          reference {
-            ...Media
-          }
-        }
-        spreadSecondary: metafield(namespace: "hero", key: "spread_secondary") {
-          reference {
-            ...Media
-          }
-        }
-      }
-    }
-    featuredCollections: collections(
-      first: 3
-      query: "collection_type:smart"
-      sortKey: UPDATED_AT
-    ) {
-      nodes {
-        id
-        title
-        handle
-        image {
-          altText
-          width
-          height
-          url
-        }
-      }
-    }
-    featuredProducts: products(first: 12) {
-      nodes {
-        ...ProductCard
-      }
-    }
-  }
-`;
 
 const HOMEPAGE_SEO_QUERY = gql`
   query homeShopInfo {

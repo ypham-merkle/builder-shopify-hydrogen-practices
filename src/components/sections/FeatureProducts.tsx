@@ -31,6 +31,7 @@ export const ProductCollection = (props) => {
 
   return (
     <div>
+      <h2 style={{fontSize: "40px", fontWeight: "bold", textAlign: "center"}}>{props.title}</h2>
       {props.carousel ? "carousel" :
         <Grid layout="products">
           {products.map((product, i) => (
