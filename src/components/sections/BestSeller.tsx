@@ -21,7 +21,7 @@ export const ProductCollection = (props) => {
 
   useEffect(() => {
     try {
-      funcFetch(`/api/bestSellers?search=${encodeURIComponent(search)}&limit=${encodeURIComponent(props.limit)}`);
+      funcFetch(`/api/favorites?search=${encodeURIComponent(search)}&limit=${encodeURIComponent(props.limit)}`);
     }
     catch (e) {
       console.log('Log ERROR:');
