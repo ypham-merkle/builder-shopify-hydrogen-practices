@@ -9,7 +9,7 @@ import {builder} from '@builder.io/react';
 
 builder.init('679c25f761c647f2a8e6bf979c2a6820');
 
-const MODEL_NAME = 'page';
+const MODEL_NAME = 'builder';
 
 export default function Page(props: any) {
   const content = useQuery([MODEL_NAME, props.pathname], async () => {

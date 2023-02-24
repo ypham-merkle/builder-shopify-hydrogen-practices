@@ -5,18 +5,10 @@ import {
   Seo,
   ShopifyAnalyticsConstants,
   useServerAnalytics,
-  useLocalization,
   useShopQuery,
 } from '@shopify/hydrogen';
 
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/lib/fragments';
-import {getHeroPlaceholder} from '~/lib/placeholders';
-import {FeaturedCollections, Hero, PageHeader} from '~/components';
-import {NotFound, Layout, ProductSwimlane} from '~/components/index.server';
-import {
-  CollectionConnection,
-  ProductConnection,
-} from '@shopify/hydrogen/storefront-api-types';
+import {NotFound, Layout} from '~/components/index.server';
 
 import {BuilderComponent} from '~/components/BuilderComponent.client';
 import {useQuery} from '@shopify/hydrogen';
@@ -24,14 +16,14 @@ import {builder} from '@builder.io/react';
 
 builder.init('679c25f761c647f2a8e6bf979c2a6820');
 
-const MODEL_NAME = 'page';
+const MODEL_NAME = 'homepage';
 
 export default function Homepage(props: any) {
-  const content = useQuery([MODEL_NAME, props.pathname], async () => {
+  const content = useQuery([MODEL_NAME, props.entry], async () => {
     return await builder
       .get(MODEL_NAME, {
         userAttributes: {
-          urlPath: props.pathname,
+          entry: '679c25f761c647f2a8e6bf979c2a6820_e933474042e9449ab64c4432dff90c15'
         },
       })
       .promise();

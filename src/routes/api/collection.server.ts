@@ -2,7 +2,7 @@ import {gql} from '@shopify/hydrogen';
 import type {HydrogenApiRouteOptions, HydrogenRequest} from '@shopify/hydrogen';
 import { PRODUCT_CARD_FRAGMENT } from '~/lib/fragments';
 
-export async function api(_request: HydrogenRequest, {params, queryShop }: HydrogenApiRouteOptions) {
+export async function api(_request: HydrogenRequest, { queryShop }: HydrogenApiRouteOptions) {
   const url = new URL(_request.url);
   const cursor = url.searchParams.get('cursor');
   const country = url.searchParams.get('country');
