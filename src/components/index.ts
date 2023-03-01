@@ -9,3 +9,4 @@ export {CountrySelector} from './CountrySelector.client';
 export {CustomFont} from './CustomFont.client';
 export {HeaderFallback} from './HeaderFallback';
 export {AnnouncementBar} from './sections/AnnouncementBar.client';
+export {ProductDetailTemplate} from './product/ProductDetailTemplate.client';
