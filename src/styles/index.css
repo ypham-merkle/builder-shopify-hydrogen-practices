@@ -197,3 +197,8 @@ shop-pay-button {
 .tab-best-seller button.active {
   background-color: #ccc;
 }
+
+.variants-values label.checked {
+  color: #ffff;
+  background: red;
+}
