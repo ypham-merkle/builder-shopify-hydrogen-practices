@@ -101,7 +101,7 @@ export function OrderCard({order}: {order: Order}) {
             View Details
           </Text>
         </Link>
-        <iframe src="https://yphamag.aftership.com/iframe?page-name=tracking-page/1234" scrolling="no" frameBorder="0">
+        <iframe src={`https://yphamag.aftership.com/iframe/${order?.successfulFulfillments[0]?.trackingInfo[0]?.number}?page-name=tracking-page`} scrolling="no" frameBorder="0" width="100%">
         </iframe>
       </div>
     </li>
