@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {Image, Link, flattenConnection} from '@shopify/hydrogen';
 import type {
   Order,
@@ -11,6 +12,21 @@ export function OrderCard({order}: {order: Order}) {
   if (!order?.id) return null;
   const legacyOrderId = order!.id!.split('/').pop()!.split('?')[0];
   const lineItems = flattenConnection<OrderLineItem>(order?.lineItems);
+
+  // resize iframe to fit content
+  useEffect(() => {
+    const iframe = document.querySelector("iframe");
+    window.addEventListener("message", (event) => {
+      if (
+        event.data &&
+        event.data.type === "resize" &&
+        typeof event.data.scrollHeight === "number" &&
+        iframe
+      ) {
+        iframe.style.height = event.data.scrollHeight + "px";
+      }
+    });
+  })
 
   return (
     <li className="grid text-center border rounded">
@@ -73,6 +89,10 @@ export function OrderCard({order}: {order: Order}) {
         </div>
       </Link>
       <div className="self-end border-t">
+        Tracking number:
+        <a href={order?.successfulFulfillments[0]?.trackingInfo[0]?.url} target="_blank" style={{textDecoration: 'underline'}}>
+          {order?.successfulFulfillments[0]?.trackingInfo[0]?.number}
+        </a>
         <Link
           className="block w-full p-2 text-center"
           to={`/account/orders/${legacyOrderId}`}
@@ -81,6 +101,8 @@ export function OrderCard({order}: {order: Order}) {
             View Details
           </Text>
         </Link>
+        <iframe src="https://yphamag.aftership.com/iframe?page-name=tracking-page/1234" scrolling="no" frameBorder="0">
+        </iframe>
       </div>
     </li>
   );

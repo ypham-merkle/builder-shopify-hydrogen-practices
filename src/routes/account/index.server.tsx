@@ -245,6 +245,12 @@ const CUSTOMER_QUERY = gql`
             processedAt
             financialStatus
             fulfillmentStatus
+            successfulFulfillments {
+              trackingInfo {
+                number
+                url
+              }
+            }
             currentTotalPrice {
               amount
               currencyCode
